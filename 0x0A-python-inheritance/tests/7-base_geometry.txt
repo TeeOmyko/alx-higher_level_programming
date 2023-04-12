@@ -1,0 +1,71 @@
+# Importing the function from the module
+import importlib
+BG = importlib.import_module("7-base_geometry").BaseGeometry
+
+# Checking for module docstring
+m = importlib.import_module("7-base_geometry").__doc__
+assert len(m) > 1
+
+# Checking for class docstring
+c = BG.__doc__
+assert len(c) > 1
+
+# Checking for method docstring
+mod1 = BG.area.__doc__
+assert len(mod1) > 1
+mod2 = BG.integer_validator.__doc__
+assert len(mod2) > 1
+
+# Checking for area failure
+b = BG()
+try:
+    b.area()
+except Exception as e:
+    assert str(e) == "area() is not implemented"
+
+# Checking too many arguments for area
+try:
+    b.area(1)
+except TypeError as e:
+    assert str(e) == "area() takes 1 positional argument but 2 were given"
+
+# Checking integer validator for passing integer
+b.integer_validator("integer", 1)
+
+# Checking for integer == 0
+try:
+    b.integer_validator("integer", 0)
+except ValueError as e:
+    assert str(e) == "integer must be greater than 0"
+
+# Checking for integer < 0
+try:
+    b.integer_validator("integer", -5)
+except ValueError as e:
+    assert str(e) == "integer must be greater than 0"
+
+# Checking for non-integer types
+for data_type in ["bool", "float", "complex", "string", "tuple", "list", "dict", "set", "frozenset", "bytes", "bytearrays"]:
+    try:
+        b.integer_validator(data_type, eval(data_type))
+    except TypeError as e:
+        assert str(e) == f"{data_type} must be an integer"
+
+# Checking for no arguments to integer_validator
+try:
+    b.integer_validator()
+except TypeError as e:
+    assert str(e) == "integer_validator() missing 2 required positional arguments: 'name' and 'value'"
+
+# Checking for only 1 argument to integer_validator
+try:
+    b.integer_validator("integer")
+except TypeError as e:
+    assert str(e) == "integer_validator() missing 1 required positional argument: 'value'"
+
+# Checking for too many arguments
+try:
+    b.integer_validator("integer", 1, 2)
+except TypeError as e:
+    assert str(e) == "integer_validator() takes 3 positional arguments but 4 were given"
+
