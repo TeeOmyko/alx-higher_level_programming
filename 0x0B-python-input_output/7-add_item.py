@@ -1,24 +1,38 @@
 #!/usr/bin/python3
-"""Add all arguments to a Python list and save them to a file."""
+"""
+This module adds all command line arguments to a Python list and saves them to a file.
+"""
+
 import sys
 from typing import List
+from json import dump, load
 from pathlib import Path
 
-from save_to_json_file import save_to_json_file
-from load_from_json_file import load_from_json_file
+
+def load_items_from_file(file_path: str) -> List[str]:
+    """
+    Loads a list of items from a JSON file.
+    If the file does not exist, an empty list is returned.
+    """
+    if not Path(file_path).is_file():
+        return []
+    with open(file_path) as f:
+        return load(f)
 
 
-def add_items_to_list_and_save(items: List[str], filename: str) -> None:
-    """Adds items to a list and saves it to a JSON file."""
-    try:
-        items_list = load_from_json_file(filename)
-    except FileNotFoundError:
-        items_list = []
-    items_list.extend(items)
-    save_to_json_file(items_list, filename)
+def save_items_to_file(items: List[str], file_path: str) -> None:
+    """
+    Saves a list of items to a JSON file.
+    """
+    with open(file_path, 'w') as f:
+        dump(items, f)
 
 
 if __name__ == "__main__":
-    args = sys.argv[1:]
-    add_items_to_list_and_save(args, "add_item.json")
+    try:
+        items = load_items_from_file("add_item.json")
+    except FileNotFoundError:
+        items = []
+    items.extend(sys.argv[1:])
+    save_items_to_file(items, "add_item.json")
 
