@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""cript that lists all State objects that contain the letter a from the
+"""script that lists all State objects that contain the letter a from the
 database hbtn_0e_6_usa
 """
 if __name__ == "__main__":
